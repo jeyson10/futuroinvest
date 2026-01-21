@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FuturoInvest - Análisis Técnico de Criptomonedas</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📈 FuturoInvest</h1>
+            <p class="subtitle">Análisis Técnico para Trading de Futuros</p>
+        </header>
+
+        <div class="disclaimer">
+            ⚠️ <strong>Disclaimer:</strong> Esto es solo con fines educativos y no es asesoría financiera. Opera bajo tu propio riesgo.
+        </div>
+
+        <div class="card control-panel">
+            <h2>Configuración del Análisis</h2>
+            <div class="controls">
+                <div class="control-group">
+                    <label for="symbol">Par de Trading</label>
+                    <div class="symbol-selector">
+                        <select id="symbolPreset">
+                            <option value="BTCUSDT">BTCUSDT - Bitcoin</option>
+                            <option value="ETHUSDT">ETHUSDT - Ethereum</option>
+                            <option value="BNBUSDT">BNBUSDT - Binance Coin</option>
+                            <option value="SOLUSDT">SOLUSDT - Solana</option>
+                            <option value="XRPUSDT">XRPUSDT - Ripple</option>
+                            <option value="ADAUSDT">ADAUSDT - Cardano</option>
+                            <option value="DOGEUSDT">DOGEUSDT - Dogecoin</option>
+                            <option value="MATICUSDT">MATICUSDT - Polygon</option>
+                            <option value="DOTUSDT">DOTUSDT - Polkadot</option>
+                            <option value="AVAXUSDT">AVAXUSDT - Avalanche</option>
+                            <option value="LINKUSDT">LINKUSDT - Chainlink</option>
+                            <option value="ATOMUSDT">ATOMUSDT - Cosmos</option>
+                            <option value="LTCUSDT">LTCUSDT - Litecoin</option>
+                            <option value="UNIUSDT">UNIUSDT - Uniswap</option>
+                            <option value="TRXUSDT">TRXUSDT - Tron</option>
+                            <option value="ETCUSDT">ETCUSDT - Ethereum Classic</option>
+                            <option value="XLMUSDT">XLMUSDT - Stellar</option>
+                            <option value="NEARUSDT">NEARUSDT - Near Protocol</option>
+                            <option value="ALGOUSDT">ALGOUSDT - Algorand</option>
+                            <option value="VETUSDT">VETUSDT - VeChain</option>
+                            <option value="ICPUSDT">ICPUSDT - Internet Computer</option>
+                            <option value="FILUSDT">FILUSDT - Filecoin</option>
+                            <option value="APTUSDT">APTUSDT - Aptos</option>
+                            <option value="ARBUSDT">ARBUSDT - Arbitrum</option>
+                            <option value="OPUSDT">OPUSDT - Optimism</option>
+                            <option value="INJUSDT">INJUSDT - Injective</option>
+                            <option value="SUIUSDT">SUIUSDT - Sui</option>
+                            <option value="PEPEUSDT">PEPEUSDT - Pepe</option>
+                            <option value="SHIBUSDT">SHIBUSDT - Shiba Inu</option>
+                            <option value="WLDUSDT">WLDUSDT - Worldcoin</option>
+                            <option value="custom">Personalizado...</option>
+                        </select>
+                        <input type="text" id="customSymbol" placeholder="Ej: DOGEUSDT" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label for="timeframe">Timeframe</label>
+                    <select id="timeframe">
+                        <option value="1m">1 minuto</option>
+                        <option value="5m">5 minutos</option>
+                        <option value="15m" selected>15 minutos</option>
+                        <option value="1h">1 hora</option>
+                        <option value="4h">4 horas</option>
+                        <option value="1d">1 día</option>
+                    </select>
+                </div>
+
+                <button id="analyzeBtn" class="btn-primary">🔍 Analizar</button>
+            </div>
+            <div id="loadingIndicator" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Obteniendo datos y analizando...</p>
+            </div>
+        </div>
+
+        <div id="resultsSection" style="display: none;">
+            <div class="card chart-card">
+                <h2>Gráfico en Tiempo Real</h2>
+                <div id="tradingview_chart" class="chart-container"></div>
+            </div>
+
+            <div class="card result-card">
+                <h2>Resultado del Análisis</h2>
+                <div class="signal-container">
+                    <div class="signal-badge" id="signalBadge">-</div>
+                    <div class="signal-info">
+                        <div class="info-row">
+                            <span class="label">Símbolo:</span>
+                            <span id="resultSymbol">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Timeframe:</span>
+                            <span id="resultTimeframe">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Precio Actual:</span>
+                            <span id="resultPrice">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="score-section">
+                    <h3>Score de Confluencia</h3>
+                    <div class="score-bar-container">
+                        <div class="score-bar" id="scoreBar"></div>
+                    </div>
+                    <p class="score-value" id="scoreValue">0/100</p>
+                    <p class="score-description" id="scoreDescription">-</p>
+                </div>
+
+                <div class="trade-params">
+                    <div class="param-item">
+                        <span class="param-label">Entry</span>
+                        <span class="param-value" id="entryPrice">-</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">Stop Loss</span>
+                        <span class="param-value" id="stopLoss">-</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">TP1</span>
+                        <span class="param-value" id="tp1">-</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">TP2</span>
+                        <span class="param-value" id="tp2">-</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">R:R (TP1)</span>
+                        <span class="param-value" id="rr1">-</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">R:R (TP2)</span>
+                        <span class="param-value" id="rr2">-</span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="copyBtn" class="btn-secondary">📋 Copiar Reporte</button>
+                    <button id="exportBtn" class="btn-secondary">💾 Exportar JSON</button>
+                </div>
+            </div>
+
+            <div class="card details-card">
+                <h2>Detalles del Análisis</h2>
+                
+                <h3>Indicadores Técnicos</h3>
+                <div class="indicators-table" id="indicatorsTable">
+                    <!-- Se llenará dinámicamente -->
+                </div>
+
+                <h3>Reglas de Trading</h3>
+                <div class="rules-checklist" id="rulesChecklist">
+                    <!-- Se llenará dinámicamente -->
+                </div>
+            </div>
+        </div>
+
+        <div class="card history-card">
+            <h2>Historial de Análisis</h2>
+            <div class="history-controls">
+                <button id="clearHistoryBtn" class="btn-danger">🗑️ Borrar Historial</button>
+            </div>
+            <div id="historyList" class="history-list">
+                <p class="empty-message">No hay análisis previos</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>FuturoInvest © 2026 - Herramienta educativa de análisis técnico</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+</body>
+</html>
